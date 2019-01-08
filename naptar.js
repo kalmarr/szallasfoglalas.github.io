@@ -6,6 +6,7 @@ aktualisDatumFormazva += "-";
 aktualisDatumFormazva += (aktualisDatum.getDate() < 10) ? ("0"+aktualisDatum.getDate()) : (aktualisDatum.getDate());
 
 const szobaSzam=5;
+
 //let kattBlokk=false;
 
 $(document).ready(function(){
