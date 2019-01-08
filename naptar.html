@@ -1,0 +1,47 @@
+<html>
+
+    <head>
+        <title>Naptár</title>
+            <script src="js\original\jquery-3.3.1.min.js"></script>
+
+
+
+            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+            
+            <meta charset="UTF-8">
+
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css "integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+            <link href="css\original\jquery-ui.css" rel="stylesheet">
+            <link href="css\naptar\naptar.css" rel="stylesheet">
+
+            <script src="naptar.js"></script>
+            <script src="JSON\naptarAdatok.js"></script>
+
+            
+    </head>
+    
+<body>
+    <h1>Naptár</h1>
+    <p><select id="referenciaEv"></select>
+    <select id="referenciaHonap"></select>
+    <label for="szobaStatusz"> | Szoba státusz:</label>
+    <select id="szobaStatusz">
+        <option value="r">Foglalt</option>
+        <option value="f">Szabad</option>
+        <option value="i">Inaktív</option>
+        
+    </select>
+   
+    </p>
+
+    <div id="naptar"></div>
+    <p></p>
+    <div id="jsonAdatok"></div>
+
+  
+
+</body>
+</html>
