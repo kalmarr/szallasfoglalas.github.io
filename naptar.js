@@ -30,7 +30,7 @@ $(document).ready(function(){
 
 function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
     //Naptár generálás
-    let naptarTartalom="", szobaSzamSeged=1, index = kezdoDatum, idTablazat ="", classTrSzoba ="", napDatuma="", szobaSzamSegedEgyben="", szobaSatusz= "f", tablazatTartalma;
+    let naptarTartalom="", szobaSzamSeged=1, index = kezdoDatum, idTablazat ="", classTrSzoba ="", napDatuma="", szobaSzamSegedEgyben="", szobaAr, szobaSatusz= "f", tablazatTartalma;
         naptarTartalom += '<table id="naptar" class="table table-hover">';
         naptarTartalom += "<thead>";
         naptarTartalom += "<tr>";
@@ -82,7 +82,7 @@ function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
             
                     naptarTartalom += " "+szobaSatusz+">"
             //Naptár és adott szoba tartalma - ár - kiíratása
-                    naptarTartalom += '<input type="text" value="100" class="szobaAraMegjelenit_'+tizAlatti(szobaSzamSeged)+'" placeholder="EUR" disabled>';
+                    naptarTartalom += '<input type="text" value="100" class="szobaAraMegjelenit_'+tizAlatti(szobaSzamSeged)+'" placeholder="EUR" disabled >';
                     naptarTartalom += "<br><br>";
                     naptarTartalom += '<input type="number" value="100" class="szobaAraSzerkeszt_'+tizAlatti(szobaSzamSeged)+'" placeholder="EUR" min="1" max="500">';
             
@@ -123,7 +123,9 @@ let tesztHide, tesztColor;
         tesztHide = $(this).closest('td').children().last().css('display');
         
         szobaSatusz = $("#szobaStatusz").val();
-        
+        szobaAr = $(this)["0"].firstChild.attributes["0"].ownerElement.value;
+
+
         tesztColor = $(this).closest('td').css('background-color');
         
         if (tesztColor === 'rgb(255, 0, 0)' ) {if (szobaSatusz === "r" ) {szobaSatusz="f";}}
@@ -137,6 +139,7 @@ let tesztHide, tesztColor;
                     'szobaAdat' : [
                         {
                         'szobaSzam' : [classTrSzoba],
+                        'szobaAr' : [szobaAr],
                         'szobaStatuszAdat' : [szobaSatusz]
                         }
                     ]
@@ -150,15 +153,15 @@ if (tesztHide==="none") {
         switch (szobaSatusz){
             case "r" :
             $(this).css("background", "red");
-                naptarStatuszJelzesModositas (szobaSatusz, idTablazat, classTrSzoba, statuszTemp, szobaTemp); 
+                naptarStatuszJelzesModositas (szobaSatusz, szobaAr, idTablazat, classTrSzoba, statuszTemp, szobaTemp); 
             break;
             case "f" :
             $(this).css("background", "green");
-                naptarStatuszJelzesModositas (szobaSatusz, idTablazat, classTrSzoba, statuszTemp, szobaTemp); 
+                naptarStatuszJelzesModositas (szobaSatusz, szobaAr, idTablazat, classTrSzoba, statuszTemp, szobaTemp); 
             break;
             case "i" :
             $(this).css("background", "yellow");
-                naptarStatuszJelzesModositas (szobaSatusz, idTablazat, classTrSzoba, statuszTemp, szobaTemp); 
+                naptarStatuszJelzesModositas (szobaSatusz, szobaAr, idTablazat, classTrSzoba, statuszTemp, szobaTemp); 
             break;
             default:
         }
@@ -171,6 +174,7 @@ if (tesztHide==="none") {
                 
             naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaSzam + " - ";
             naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaStatuszAdat + ", ";
+            naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaAr + "EUR";
             }
             naptarTartalom += "<br>";
        }
@@ -203,7 +207,7 @@ return new Date(year, month, 0).getDate();
 
 }
 
-function naptarStatuszJelzesModositas (szobaSatusz, idTablazat, classTrSzoba, statuszTemp, szobaTemp) {
+function naptarStatuszJelzesModositas (szobaSatusz, szobaAr, idTablazat, classTrSzoba, statuszTemp, szobaTemp) {
 let index=0, index2=0, modositas = false;
 
     for (index=0; index < naptarAdatok.length; index++) {
@@ -211,7 +215,9 @@ let index=0, index2=0, modositas = false;
         
             for (index2=0; index2 < naptarAdatok[index].szobaAdat.length; index2++ ) {
                 if (naptarAdatok[index].szobaAdat[index2].szobaSzam == classTrSzoba)
-                { naptarAdatok[index].szobaAdat[index2].szobaStatuszAdat = szobaSatusz; modositas = true;}                  
+                { naptarAdatok[index].szobaAdat[index2].szobaStatuszAdat = szobaSatusz;
+                  naptarAdatok[index].szobaAdat[index2].szobaAr = szobaAr;
+                  modositas = true;}                  
             } 
             if (modositas===false) { modositas = true; naptarAdatok[index].szobaAdat.push(szobaTemp);
             }
@@ -240,15 +246,12 @@ function arLenyitasa () {
 
 function ujArmegadasa (){
     $("[class^='szobaAraSzerkeszt_']").on("change", function(){
-        
+       
         let arErtekValtozas = $(this).val();
         let tdId = ($(this).parent().get( 0 )).id;
-        let arClassPozicio = $(this).attr('class');
-        let egyik = "#_2019-01-01", masik = " .szobaAraMegjelenit" ,ossz = egyik+masik;
-        $(ossz).val(1);
-        $(tdId).val(arErtekValtozas);
-        console.log (ossz);
-
+        let arClassPozicio = "szobaAraMegjelenit_" + $(this).attr('class').slice(-2);
+        let Osszvon = "#"+tdId+" "+"."+arClassPozicio;
+        $(Osszvon).val(arErtekValtozas);
     });
 
 }
