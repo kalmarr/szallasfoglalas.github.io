@@ -1,13 +1,11 @@
 const honapokNeve = ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December" ];
 
 let aktualisDatum = new Date(), aktualisDatumFormazva = aktualisDatum.getFullYear() + "-";
-aktualisDatumFormazva += (aktualisDatum.getMonth()+1 < 10) ? ("0"+(aktualisDatum.getMonth()+1)) : ((aktualisDatum.getMonth()+1));
+aktualisDatumFormazva += tizAlatti(aktualisDatum.getMonth()+1);
 aktualisDatumFormazva += "-";
-aktualisDatumFormazva += (aktualisDatum.getDate() < 10) ? ("0"+aktualisDatum.getDate()) : (aktualisDatum.getDate());
+aktualisDatumFormazva += tizAlatti(aktualisDatum.getDate());
 
 const szobaSzam=5;
-
-//let kattBlokk=false;
 
 $(document).ready(function(){
 
@@ -50,19 +48,19 @@ function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
         while ((szobaSzam+1)>szobaSzamSeged){
             naptarTartalom += "<tr class=";
             naptarTartalom += "room_";
-            naptarTartalom += szobaSzamSeged < 10 ? ("0"+szobaSzamSeged) : (szobaSzamSeged);
-            szobaSzamSegedEgyben = "room_"+(szobaSzamSeged < 10 ? ("0"+szobaSzamSeged) : (szobaSzamSeged));
+            naptarTartalom += tizAlatti(szobaSzamSeged);
+            szobaSzamSegedEgyben = "room_"+tizAlatti(szobaSzamSeged);
             naptarTartalom += ">";
 
-            naptarTartalom += '<th class="arFelfed_'+szobaSzamSeged+'" scope="row"><span>'+szobaSzamSeged+'. szoba</span><br><br><span class="szobaArOszlop_'+szobaSzamSeged+'">Szoba ár:</span></th>'
+            naptarTartalom += '<th class="arFelfed_'+tizAlatti(szobaSzamSeged)+'" scope="row"><span>'+szobaSzamSeged+'. szoba</span><br><br><span class="szobaArOszlop_'+tizAlatti(szobaSzamSeged)+'">Szoba ár:</span></th>'
             
             for (index=kezdoDatum; index<zaroDatum+1; index++){
                     idTablazat = "_"+evErtek+"-";
-                    idTablazat += honapErtek < 10 ? ("0"+honapErtek+"-") : (honapErtek+"-");
+                    idTablazat += tizAlatti(honapErtek);
+                    idTablazat += "-";
                     idTablazat += index < 10 ? ("0"+index) : (index);
 
-                    napDatuma = evErtek + "-" + (honapErtek < 10 ? ("0"+honapErtek+"-") : (honapErtek+"-")) + (index < 10 ? ("0"+index) : (index));
-                    
+                    napDatuma = evErtek + "-" + tizAlatti (honapErtek)+ "-" + (index < 10 ? ("0"+index) : (index));
 
                 naptarTartalom += '<td id='+idTablazat;
                 naptarTartalom += " class=";
@@ -71,7 +69,7 @@ function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
                     if (naptarAdatok[index3].datumIdAdatok == napDatuma ){
                      
                         for (let index4=0; index4 < naptarAdatok[index3].szobaAdat.length; index4++) {
-                            if (naptarAdatok[index3].szobaAdat[index4].szobaSzam == szobaSzamSegedEgyben) { szobaSatusz = naptarAdatok[index3].szobaAdat[index4].szobaStatuszAdat; console.log(szobaSatusz); break;}
+                            if (naptarAdatok[index3].szobaAdat[index4].szobaSzam == szobaSzamSegedEgyben) { szobaSatusz = naptarAdatok[index3].szobaAdat[index4].szobaStatuszAdat; break;}
                         }
                     }
                 }
@@ -84,9 +82,9 @@ function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
             
                     naptarTartalom += " "+szobaSatusz+">"
             //Naptár és adott szoba tartalma - ár - kiíratása
-                    naptarTartalom += '<input type="text" value="100" class="szobaAraMegjelenit" placeholder="EUR" disabled>';
+                    naptarTartalom += '<input type="text" value="100" class="szobaAraMegjelenit_'+tizAlatti(szobaSzamSeged)+'" placeholder="EUR" disabled>';
                     naptarTartalom += "<br><br>";
-                    naptarTartalom += '<input type="number" value="100" class="szobaAraSzerkeszt_'+szobaSzamSeged+'" placeholder="EUR" min="1" max="500">';
+                    naptarTartalom += '<input type="number" value="100" class="szobaAraSzerkeszt_'+tizAlatti(szobaSzamSeged)+'" placeholder="EUR" min="1" max="500">';
             
                     naptarTartalom += "</td>";
             szobaSatusz = "f";
@@ -101,6 +99,7 @@ function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
 
     $("#naptar").html(naptarTartalom);
     arLenyitasa ();
+    ujArmegadasa ();
      
     //Múlt színezése
     $("#naptar td.f_o").css({"background" : "rgb(0, 128, 0, .2)"});
@@ -223,14 +222,34 @@ if (modositas===false){naptarAdatok.push(statuszTemp);}
 
 }
 
+function tizAlatti(ertek) {
+// A bemeti értéket megvizsgálja és kiegésziti nullara, ha kisebb, mint 10)
+    if (ertek<10) {return "0"+ertek}
+    else {return ertek}
+}
+
 function arLenyitasa () {
     // Ez a funkció kell ahoz, hogy az ár mező lenyíljon.
     $("[class^='arFelfed_']").on("click", function(){
-                  let nyitszobaAra = ".szobaAraSzerkeszt_" + ($(this).attr('class').slice(-1)),
-                    nyitzobaArNeve = ".szobaArOszlop_" + ($(this).attr('class').slice(-1));
+                  let nyitszobaAra = ".szobaAraSzerkeszt_" + ($(this).attr('class').slice(-2)),
+                    nyitzobaArNeve = ".szobaArOszlop_" + ($(this).attr('class').slice(-2));
                     $(nyitszobaAra).toggle();
                     $(nyitzobaArNeve).toggle();        
             });
 }
 
+function ujArmegadasa (){
+    $("[class^='szobaAraSzerkeszt_']").on("change", function(){
+        
+        let arErtekValtozas = $(this).val();
+        let tdId = ($(this).parent().get( 0 )).id;
+        let arClassPozicio = $(this).attr('class');
+        let egyik = "#_2019-01-01", masik = " .szobaAraMegjelenit" ,ossz = egyik+masik;
+        $(ossz).val(1);
+        $(tdId).val(arErtekValtozas);
+        console.log (ossz);
+
+    });
+
+}
 

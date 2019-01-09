@@ -11,7 +11,7 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
-.szobaAraMegjelenit {
+[class*="szobaAraMegjelenit_"] {
     width: 4em;
     font-size: xx-small;
 }
