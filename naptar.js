@@ -17,29 +17,18 @@ $(document).ready(function(){
         let honap = parseInt(this.value)+1,
             ev = parseInt($("#referenciaEv").val());        
             NaptarGeneralasa (1, daysInMonth(honap,ev), ev, honap);
-
-
     });
 
     $("#referenciaEv").on("change", function(){
         let honap = parseInt($("#referenciaHonap").val())+1;
             ev = parseInt(this.value),   
             NaptarGeneralasa (1, daysInMonth(honap,ev), ev, honap);
-
-
     });
     
-    $("[class^='arFelfed_']").on("click", function(){
-///ujra futtatni...
-          let nyitszobaAra = ".szobaAraSzerkeszt_" + ($(this).attr('class').slice(-1)),
-            nyitzobaArNeve = ".szobaArOszlop_" + ($(this).attr('class').slice(-1));
-            $(nyitszobaAra).toggle();
-            $(nyitzobaArNeve).toggle();
-
-
-    });
-
 });
+
+
+
 
 function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
     //Naptár generálás
@@ -111,6 +100,7 @@ function NaptarGeneralasa (kezdoDatum, zaroDatum, evErtek, honapErtek){
         naptarTartalom += "</table>";
 
     $("#naptar").html(naptarTartalom);
+    arLenyitasa ();
      
     //Múlt színezése
     $("#naptar td.f_o").css({"background" : "rgb(0, 128, 0, .2)"});
@@ -233,5 +223,14 @@ if (modositas===false){naptarAdatok.push(statuszTemp);}
 
 }
 
+function arLenyitasa () {
+    // Ez a funkció kell ahoz, hogy az ár mező lenyíljon.
+    $("[class^='arFelfed_']").on("click", function(){
+                  let nyitszobaAra = ".szobaAraSzerkeszt_" + ($(this).attr('class').slice(-1)),
+                    nyitzobaArNeve = ".szobaArOszlop_" + ($(this).attr('class').slice(-1));
+                    $(nyitszobaAra).toggle();
+                    $(nyitzobaArNeve).toggle();        
+            });
+}
 
 
