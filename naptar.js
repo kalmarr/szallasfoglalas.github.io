@@ -141,8 +141,8 @@ let tesztHide, tesztColor;
         if (tesztColor === 'rgb(255, 0, 0)' ) {if (szobaSatusz === "r" ) {szobaSatusz="f";}}
         if (tesztColor === 'rgb(0, 128, 0)' ) {if (szobaSatusz === "f") {szobaSatusz="r";}}
 
-
         modositas = false;
+        
         let statuszTemp = 
                 {
                     'datumIdAdatok' : idTablazat,
@@ -153,14 +153,15 @@ let tesztHide, tesztColor;
                         'szobaStatuszAdat' : [szobaSatusz]
                         }
                     ]
-                }
-            ;
-        let szobaTemp = {
+                };
+        
+            let szobaTemp = {
             'szobaSzam' : classTrSzoba,
             'szobaAr'   : szobaAr,  
             'szobaStatuszAdat' : szobaSatusz
-            }
-if (tesztHide==="none") {
+            };
+
+            if (tesztHide==="none") {
         switch (szobaSatusz){
             case "r" :
             $(this).css("background", "red");
@@ -177,34 +178,27 @@ if (tesztHide==="none") {
             default:
         }
 
-
         naptarTartalom ="";
 
         datumBeallitasLekerdezese ();
-
         jsonAdatokMegjelenitese ();
-
-
 }
-
-    });
-    
+    });  
 }
 
 function jsonAdatokMegjelenitese (){
-let naptarTartalom="";
-for (index=0; index < naptarAdatok.length; index++) {
+    let naptarTartalom="";
+    for (index=0; index < naptarAdatok.length; index++) {
     naptarTartalom += naptarAdatok[index].datumIdAdatok + " - ";
-    for (index2=0; index2 < naptarAdatok[index].szobaAdat.length; index2++) {
-        
-    naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaSzam + " - ";
-    naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaStatuszAdat + ", ";
-    naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaAr + " EUR";
-    naptarTartalom += " -- ";
-    }
+        for (index2=0; index2 < naptarAdatok[index].szobaAdat.length; index2++) {
+            naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaSzam + " - ";
+            naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaStatuszAdat + ", ";
+            naptarTartalom += naptarAdatok[index].szobaAdat[index2].szobaAr + " EUR";
+            naptarTartalom += " -- ";
+        }
     naptarTartalom += "<br>";
-}
-$("#jsonAdatok").html(naptarTartalom);
+    }
+    $("#jsonAdatok").html(naptarTartalom);
 }
 
 function referenciaDatumBeallitasa (){
@@ -224,8 +218,7 @@ function referenciaDatumBeallitasa (){
 
 
 function daysInMonth(month,year) {
-return new Date(year, month, 0).getDate();
-
+    return new Date(year, month, 0).getDate();
 }
 
 function naptarStatuszJelzesModositas (szobaSatusz, szobaAr, idTablazat, classTrSzoba, statuszTemp, szobaTemp) {
@@ -242,7 +235,6 @@ let index=0, index2=0, modositas = false;
             } 
             if (modositas===false) { modositas = true; naptarAdatok[index].szobaAdat.push(szobaTemp);
             }
-    
     }    
 }
 if (modositas===false){naptarAdatok.push(statuszTemp);}
@@ -273,18 +265,15 @@ function ujArmegadasa (){
         let arClassIndex = $(this).attr('class').slice(21);
             arClassIndexNap = arClassIndex.slice(3),
             nX = (arClassIndexNap.search("_"));
-        let nIndex, szIndex;    
-           
-           
+        let nIndex, szIndex;            
        
         $(PriceViewId).val(arErtekValtozas);
-
+//Adatbázis mentése
         if(arClassIndex==='CD_-1_CR_-1') {}
         else {
             nIndex = parseInt(arClassIndexNap.slice(0,nX));
             szIndex = parseInt(arClassIndexNap.slice(nX+4));
             naptarAdatok[nIndex].szobaAdat[szIndex].szobaAr = arErtekValtozas;
-            console.log(nIndex,szIndex);
             jsonAdatokMegjelenitese ();
         }
     });
